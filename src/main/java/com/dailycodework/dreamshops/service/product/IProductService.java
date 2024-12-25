@@ -1,21 +1,23 @@
-package com.dailycodework.dreamshops.model.service.product;
+package com.dailycodework.dreamshops.service.product;
 
 import java.util.List;
 
 import com.dailycodework.dreamshops.model.Product;
+import com.dailycodework.dreamshops.request.AddProductRequest;
+import com.dailycodework.dreamshops.request.ProductUpdateRequest;
 
 /**
  * Interface for Product Service operations.
  * Provides methods to perform CRUD operations and queries on products.
  */
 public interface IProductService {
-  Product addProduct(Product product);
+  Product addProduct(AddProductRequest request);
 
   Product getProductById(Long id);
 
   void deleteProductById(Long id);
 
-  void updateProduct(Product product, Long productId);
+  Product updateProduct(ProductUpdateRequest request, Long productId);
 
   List<Product> getAllProducts();
 
