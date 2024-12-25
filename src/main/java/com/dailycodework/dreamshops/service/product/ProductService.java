@@ -47,13 +47,15 @@ public class ProductService implements IProductService {
 
   // Helper method to create a Product entity from the request
   private Product createProduct(AddProductRequest request) {
-    return new Product(
-        request.getName(),
-        request.getBrand(),
-        request.getPrice(),
-        request.getInventory(),
-        request.getDescription(),
-        request.getCategory());
+    // Build and return a new Product entity from the request
+    return Product.builder()
+        .name(request.getName())
+        .brand(request.getBrand())
+        .price(request.getPrice())
+        .inventory(request.getInventory())
+        .description(request.getDescription())
+        .category(request.getCategory())
+        .build();
   }
 
   @Override
