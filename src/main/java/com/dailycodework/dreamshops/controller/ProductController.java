@@ -13,7 +13,6 @@ import com.dailycodework.dreamshops.request.AddProductRequest;
 import com.dailycodework.dreamshops.request.ProductUpdateRequest;
 import com.dailycodework.dreamshops.response.ApiResponse;
 import com.dailycodework.dreamshops.service.product.IProductService;
-import com.dailycodework.dreamshops.service.product.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
