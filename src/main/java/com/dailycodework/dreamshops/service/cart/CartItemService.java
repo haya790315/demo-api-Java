@@ -2,6 +2,8 @@ package com.dailycodework.dreamshops.service.cart;
 
 import java.math.BigDecimal;
 
+import org.springframework.stereotype.Service;
+
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
 import com.dailycodework.dreamshops.model.Cart;
 import com.dailycodework.dreamshops.model.CartItem;
@@ -12,6 +14,7 @@ import com.dailycodework.dreamshops.service.product.IProductService;
 
 import lombok.RequiredArgsConstructor;
 
+@Service
 @RequiredArgsConstructor
 public class CartItemService implements ICartItemService {
   private final CartItemRepository cartItemRepository;

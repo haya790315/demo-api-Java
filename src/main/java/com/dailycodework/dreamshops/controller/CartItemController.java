@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
 import com.dailycodework.dreamshops.response.ApiResponse;
 import com.dailycodework.dreamshops.service.cart.ICartItemService;
+import com.dailycodework.dreamshops.service.cart.ICartService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +21,14 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("${api.prefix}/cartItems")
 public class CartItemController {
   private final ICartItemService cartItemService;
-
+  private final ICartService cartService;
   @PostMapping("/item/add")
-  public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId, @RequestParam Long productId,
+  public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId, @RequestParam Long productId,
       @RequestParam Integer quantity) {
     try {
+      if (cartId == null) {
+        cartId = cartService.initializeNewCart();
+      }
       cartItemService.addItemToCart(cartId, productId, quantity);
       return ResponseEntity.ok(new ApiResponse("Item added to cart", null));
     } catch (ResourceNotFoundException e) {
