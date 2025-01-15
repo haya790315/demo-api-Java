@@ -2,6 +2,8 @@ package com.dailycodework.dreamshops.model;
 
 import java.sql.Blob;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,5 +37,6 @@ public class Image {
 
   @ManyToOne
   @JoinColumn(name = "product_id")
+  @JsonIgnoreProperties("images")
   private Product product;
 }

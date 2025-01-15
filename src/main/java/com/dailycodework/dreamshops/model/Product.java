@@ -3,6 +3,7 @@ package com.dailycodework.dreamshops.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +41,7 @@ public class Product {
   // cascaded to the associated Category entity.
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "category_id")
+  @JsonIgnoreProperties("products")
   private Category category;
 
   /**
@@ -52,5 +54,6 @@ public class Product {
    * database.
    */
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnoreProperties("product")
   private List<Image> images;
 }
