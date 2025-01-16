@@ -27,30 +27,30 @@ public class CartItem {
   private Long id;
 
   private int quantity;
-  private BigDecimal unitPrice;
+  private BigDecimal unitPrice = BigDecimal.ZERO;
   private BigDecimal totalPrice;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "product_id")
+  // @JsonIgnore
   private Product product;
 
-  @JsonIgnore
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "cart_id")
+  @JsonIgnore
   private Cart cart;
 
-  public void setQuantity(int quantity) {
-    this.quantity = quantity;
+  public void setQuantity(int newQuantity) {
+    quantity = newQuantity;
     updateTotalPrice();
   }
 
-  public void setUnitPrice(BigDecimal unitPrice) {
-    this.unitPrice = unitPrice;
+  public void setUnitPrice(BigDecimal newUnitPrice) {
+    unitPrice = newUnitPrice;
     updateTotalPrice();
   }
 
   private void updateTotalPrice() {
-    this.totalPrice = this.unitPrice.multiply(new BigDecimal(this.quantity));
+    totalPrice = unitPrice.multiply(new BigDecimal(this.quantity));
   }
 }

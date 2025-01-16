@@ -45,17 +45,20 @@ public class ProductController {
     }
   }
 
-  @GetMapping("/product/{productId}")
+  @GetMapping("/product/{productId}/id")
   public ResponseEntity<ApiResponse> getProductById(@PathVariable("productId") Long id) {
     try {
       Product product = productService.getProductById(id);
       return ResponseEntity.ok(new ApiResponse("Yes! success 🥳", product));
     } catch (ProductNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Nope!, not Found 😵‍💫", null));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new ApiResponse(e.getMessage(), null));
     }
   }
 
-  @GetMapping("/product/{name}")
+  @GetMapping("/product/{name}/name")
   public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name) {
     try {
       List<Product> products = productService.getProductByName(name);
