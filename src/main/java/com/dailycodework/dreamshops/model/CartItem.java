@@ -27,7 +27,6 @@ public class CartItem {
   private Long id;
 
   private int quantity;
-  private BigDecimal unitPrice = BigDecimal.ZERO;
   private BigDecimal totalPrice;
 
   @ManyToOne
@@ -45,12 +44,7 @@ public class CartItem {
     updateTotalPrice();
   }
 
-  public void setUnitPrice(BigDecimal newUnitPrice) {
-    unitPrice = newUnitPrice;
-    updateTotalPrice();
-  }
-
   private void updateTotalPrice() {
-    totalPrice = unitPrice.multiply(new BigDecimal(this.quantity));
+    totalPrice = product.getPrice().multiply(new BigDecimal(this.quantity));
   }
 }

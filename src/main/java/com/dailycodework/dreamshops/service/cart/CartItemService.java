@@ -9,6 +9,7 @@ import com.dailycodework.dreamshops.model.Product;
 import com.dailycodework.dreamshops.repository.CartItemRepository;
 import com.dailycodework.dreamshops.repository.CartRepository;
 import com.dailycodework.dreamshops.service.product.IProductService;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,7 +33,6 @@ public class CartItemService implements ICartItemService {
           .orElse(new CartItem());
       if (cartItem.getId() == null) {
         // 4.if No, then add the product to the cart with the requested quantity
-        cartItem.setUnitPrice(product.getPrice());
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
         cartItem.setCart(cart);
@@ -63,7 +63,6 @@ public class CartItemService implements ICartItemService {
     Cart cart = cartService.getCart(cartId);
     cart.getItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst()
         .ifPresentOrElse(item -> {
-          item.setUnitPrice(item.getProduct().getPrice());
           item.setQuantity(quantity);
           cartItemRepository.save(item);
         }, () -> {

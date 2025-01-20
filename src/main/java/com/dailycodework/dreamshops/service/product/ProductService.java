@@ -89,16 +89,30 @@ public class ProductService implements IProductService {
   // Helper method to update a Product entity from the request
   private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
     // Update the product fields with the new values
-    existingProduct.setName(request.getName());
-    existingProduct.setBrand(request.getBrand());
-    existingProduct.setPrice(request.getPrice());
+    if (request.getName() != null && !request.getName().isEmpty()) {
+      existingProduct.setName(request.getName());
+    }
+    if (request.getBrand() != null && !request.getBrand().isEmpty()) {
+      existingProduct.setBrand(request.getBrand());
+    }
+    if (request.getPrice() != null) {
+      existingProduct.setPrice(request.getPrice());
+    }
+    
     existingProduct.setInventory(request.getInventory());
-    existingProduct.setDescription(request.getDescription());
 
-    Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+    if (request.getDescription() != null && !request.getDescription().isEmpty()) {
+        existingProduct.setDescription(request.getDescription());
+    }
+
+    if (request.getCategory() != null && request.getCategory().getName() != null
+        && !request.getCategory().getName().isEmpty()) {
+        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
         .orElseThrow(
-            () -> new ProductNotFoundException("Category with name " + request.getCategory().getName() + " not found"));
-    existingProduct.setCategory(category);
+              () -> new ProductNotFoundException(
+                  "Category with name " + request.getCategory().getName() + " not found"));
+      existingProduct.setCategory(category);
+    }
 
     return existingProduct;
   }
