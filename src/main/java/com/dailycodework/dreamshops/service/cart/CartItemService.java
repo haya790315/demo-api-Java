@@ -53,8 +53,7 @@ public class CartItemService implements ICartItemService {
   public void removeItemFromCart(Long cartId, Long productId) {
     Cart cart = cartRepository.findById(cartId)
         .orElseThrow(() -> new ResourceNotFoundException("Cart not found 😵‍💫"));
-    CartItem cartItem = getCartItem(cartId, productId);
-    cart.removeItem(cartItem);
+    cart.removeItem(getCartItem(cartId, productId));
     cartRepository.save(cart);
   }
 
