@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.request;
+package com.dailycodework.dreamshops.exceptions;
 
 public class AlreadyExistsException extends RuntimeException {
   public AlreadyExistsException(String item) {
