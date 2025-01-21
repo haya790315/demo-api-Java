@@ -10,6 +10,7 @@ import com.dailycodework.dreamshops.model.Cart;
 import com.dailycodework.dreamshops.repository.CartItemRepository;
 import com.dailycodework.dreamshops.repository.CartRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,10 +27,13 @@ public class CartService implements ICartService {
   }
 
   @Override
+  @Transactional
   public void clearCart(Long id) {
     Cart cart = getCart(id);
     cartItemRepository.deleteAllByCartId(id);
     cart.getItems().clear();
+    cart.setTotalAmount(BigDecimal.ZERO);
+    cartRepository.save(cart);
   }
 
   @Override
