@@ -51,7 +51,7 @@ public class CartService implements ICartService {
   }
 
   public Cart getCartByUserId(Long userId) {
-    return cartRepository.findCartByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+    return cartRepository.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
   }
 
 }

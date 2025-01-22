@@ -8,7 +8,7 @@ import com.dailycodework.dreamshops.model.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-  Optional<Cart> findCartByUserId(Long userId);
+  Optional<Cart> findByUserId(Long userId);
 
 
 }
