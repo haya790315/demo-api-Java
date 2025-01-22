@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dailycodework.dreamshops.dto.OrderDto;
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
 import com.dailycodework.dreamshops.model.Order;
 import com.dailycodework.dreamshops.response.ApiResponse;
@@ -29,7 +30,7 @@ public class OrderController {
   @GetMapping("/{orderId}/order")
   public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderId) {
     try {
-      Order order = orderService.getOrder(orderId);
+      OrderDto order = orderService.getOrder(orderId);
       return ResponseEntity.ok(new ApiResponse("Orders Found 🥳", order));
     } catch (ResourceNotFoundException e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -41,7 +42,7 @@ public class OrderController {
   @GetMapping("/user/{userId}/orders")
   public ResponseEntity<ApiResponse> getOrdersByUser(@PathVariable Long userId) {
     try {
-      List<Order> orders = orderService.getUserOrders(userId);
+      List<OrderDto> orders = orderService.getUserOrders(userId);
       return ResponseEntity.ok(new ApiResponse("Have these Orders 🥳", orders));
     } catch (ResourceNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)

@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
 
+import com.dailycodework.dreamshops.dto.OrderDto;
 import com.dailycodework.dreamshops.enums.OrderStatus;
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
 import com.dailycodework.dreamshops.model.Cart;
@@ -26,10 +28,13 @@ public class OrderService implements IOrderService {
   private final OrderRepository orderRepository;
   private final ProductRepository productRepository;
   private final CartService cartService;
+  // ModelMapper can be used to map data between different objects
+  private final ModelMapper modelMapper;
 
   @Override
-  public Order getOrder(Long orderId) {
-    return orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+  public OrderDto getOrder(Long orderId) {
+    return convertToDto(
+        orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found")));
   }
 
   @Override
@@ -46,8 +51,8 @@ public class OrderService implements IOrderService {
   }
 
   @Override
-  public List<Order> getUserOrders(Long userId) {
-    return orderRepository.findByUserId(userId);
+  public List<OrderDto> getUserOrders(Long userId) {
+    return orderRepository.findByUserId(userId).stream().map(this::convertToDto).toList();
   }
 
   private Order createOrder(Cart cart) {
@@ -74,5 +79,9 @@ public class OrderService implements IOrderService {
     return order.getOrderItems().stream()
         .map(orderItem -> orderItem.getProduct().getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())))
         .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  private OrderDto convertToDto(Order order) {
+    return modelMapper.map(order, OrderDto.class);
   }
 }
