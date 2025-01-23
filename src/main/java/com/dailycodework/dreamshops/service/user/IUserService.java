@@ -9,7 +9,7 @@ public interface IUserService {
 
   User createUser(CreateUserRequest request);
 
-  User updateUser(UpdateUserRequest request, Long id);
+  User updateUser(Long id, UpdateUserRequest request);
 
   void deleteUser(Long id);
 

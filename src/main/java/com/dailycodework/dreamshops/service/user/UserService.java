@@ -33,12 +33,9 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public User updateUser(UpdateUserRequest request, Long id) {
+  public User updateUser(Long id, UpdateUserRequest request) {
     User user = findUserByIdOrThrow(id);
-    user.setFirstName(request.getFirstName());
-    user.setLastName(request.getLastName());
-    // user.setEmail(request.getEmail());
-    // user.setPassword(request.getPassword());
+    user.updateUser(request);
     return userRepository.save(user);
   }
 
