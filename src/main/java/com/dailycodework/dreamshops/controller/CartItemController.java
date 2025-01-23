@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dailycodework.dreamshops.exceptions.LowStockException;
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
 import com.dailycodework.dreamshops.response.ApiResponse;
 import com.dailycodework.dreamshops.service.cart.ICartItemService;
@@ -34,6 +36,8 @@ public class CartItemController {
       return ResponseEntity.ok(new ApiResponse("Item added to cart 🥳", cartService.getCart(cartId)));
     } catch (ResourceNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+    } catch (LowStockException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
     }
   }
 
@@ -47,7 +51,7 @@ public class CartItemController {
     }
   }
 
-  @PostMapping("/cart/{cartId}/product/{productId}/update")
+  @PutMapping("/cart/{cartId}/product/{productId}/update")
       public ResponseEntity<ApiResponse> updateItemQuantity(@PathVariable Long cartId, @PathVariable Long productId,
       @RequestParam Integer quantity) {
     try {

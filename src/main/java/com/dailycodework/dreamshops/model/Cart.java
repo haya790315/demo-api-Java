@@ -40,6 +40,10 @@ public class Cart {
   @JsonIgnore
   private User user;
 
+  public Cart(User user) {
+    this.user = user;
+  }
+
   public void addItem(CartItem item) {
     items.add(item);
     item.setCart(this);

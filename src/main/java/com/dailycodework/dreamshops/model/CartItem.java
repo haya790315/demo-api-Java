@@ -3,6 +3,7 @@ package com.dailycodework.dreamshops.model;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,7 @@ public class CartItem {
 
   @ManyToOne
   @JoinColumn(name = "product_id")
-  // @JsonIgnore
+  @JsonIncludeProperties({ "id", "name", "price", "inventory" })
   private Product product;
 
   @ManyToOne

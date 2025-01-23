@@ -34,12 +34,11 @@ public class CartItemService implements ICartItemService {
       if (cartItem.getId() == null) {
         // 4.if No, then add the product to the cart with the requested quantity
         cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
         cartItem.setCart(cart);
-      } else {
-        // 5.if Yes , then increase the quantity with the requested quantity
-        cartItem.setQuantity(quantity + cartItem.getQuantity());
       }
+
+      cartItem.setQuantity(quantity + cartItem.getQuantity());
+
       cart.addItem(cartItem);
       cartItemRepository.save(cartItem);
       cartRepository.save(cart);
