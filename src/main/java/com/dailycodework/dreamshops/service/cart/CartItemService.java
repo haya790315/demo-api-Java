@@ -21,10 +21,10 @@ public class CartItemService implements ICartItemService {
   private final ICartService cartService;
 
   @Override
-  public void addItemToCart(Long cartId, Long productId, int quantity) {
+  public Cart addItemToCart(Long userId, Long productId, int quantity) {
     try {
       // 1.get Cart
-      Cart cart = cartService.getCart(cartId);
+      Cart cart = cartService.getCartByUserId(userId);
       // 2.get Product
       Product product = productService.getProductById(productId);
       // 3.check if the product already in the cart
@@ -41,24 +41,24 @@ public class CartItemService implements ICartItemService {
 
       cart.addItem(cartItem);
       cartItemRepository.save(cartItem);
-      cartRepository.save(cart);
+      return cartRepository.save(cart);
     } catch (Exception e) {
-      System.out.println("Error Happened: " + e.getMessage());
+      throw new RuntimeException("Failed to add item to cart", e);
     }
 
   }
 
   @Override
-  public void removeItemFromCart(Long cartId, Long productId) {
-    Cart cart = cartRepository.findById(cartId)
+  public Cart removeItemFromCart(Long userId, Long productId) {
+    Cart cart = cartRepository.findByUserId(userId)
         .orElseThrow(() -> new ResourceNotFoundException("Cart not found 😵‍💫"));
-    cart.removeItem(getCartItem(cartId, productId));
-    cartRepository.save(cart);
+    cart.removeItem(getCartItem(userId, productId));
+    return cartRepository.save(cart);
   }
 
   @Override
-  public void updateItemQuantity(Long cartId, Long productId, int quantity) {
-    Cart cart = cartService.getCart(cartId);
+  public Cart updateItemQuantity(Long userId, Long productId, int quantity) {
+    Cart cart = cartService.getCartByUserId(userId);
     cart.getItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst()
         .ifPresentOrElse(item -> {
           item.setQuantity(quantity);
@@ -67,12 +67,12 @@ public class CartItemService implements ICartItemService {
           throw new ResourceNotFoundException("Item not found");
         });
     cart.updateTotalAmount();
-    cartRepository.save(cart);
+    return cartRepository.save(cart);
   }
 
   @Override
-  public CartItem getCartItem(Long cartId, Long productId) {
-    Cart cart = cartRepository.findById(cartId)
+  public CartItem getCartItem(Long userId, Long productId) {
+    Cart cart = cartRepository.findByUserId(userId)
         .orElseThrow(() -> new ResourceNotFoundException("Cart not found 😵‍💫"));
     CartItem cartItem = cart.getItems().stream().filter(item -> item.getProduct().getId().equals(productId)).findFirst()
         .orElseThrow(() -> new ResourceNotFoundException("Item not found 😵‍💫"));
