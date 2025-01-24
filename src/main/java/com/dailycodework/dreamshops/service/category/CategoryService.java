@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.dailycodework.dreamshops.exceptions.AlreadyExistsException;
 import com.dailycodework.dreamshops.exceptions.CategoryNotFoundException;
 import com.dailycodework.dreamshops.model.Category;
 import com.dailycodework.dreamshops.repository.CategoryRepository;
@@ -37,9 +38,10 @@ public class CategoryService implements ICategoryService {
 
   @Override
   public Category addCategory(Category category) {
-    return Optional.of(category).filter(c -> !categoryRepository.existsByName(c.getName()))
-        .map(c -> categoryRepository.save(category))
-        .orElseThrow(() -> new CategoryNotFoundException(category.getName()));
+    if (categoryRepository.existsByName(category.getName())) {
+      throw new AlreadyExistsException(category.getName());
+    }
+    return categoryRepository.save(category);
   }
 
   @Override

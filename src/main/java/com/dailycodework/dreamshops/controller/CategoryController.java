@@ -48,6 +48,9 @@ public class CategoryController {
       return ResponseEntity.ok(new ApiResponse("Add Success 🥳", theCategory));
     } catch (CategoryNotFoundException e) {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(new ApiResponse(e.getMessage(), null));
     }
   }
 
