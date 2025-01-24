@@ -55,6 +55,9 @@ public class OrderController {
   public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId) {
     try {
       Order order = orderService.placeOrder(userId);
+      if (order == null) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ApiResponse("Cart is Empty", null));
+      }
       return ResponseEntity.ok(new ApiResponse("Order Created Success 🥳", order));
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));

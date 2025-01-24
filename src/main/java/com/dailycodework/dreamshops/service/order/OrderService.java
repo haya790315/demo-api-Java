@@ -41,6 +41,9 @@ public class OrderService implements IOrderService {
   @Transactional
   public Order placeOrder(Long userId) {
     Cart cart = cartService.getCartByUserId(userId);
+    if (cart.getItems().isEmpty()) {
+      return null;
+    }
     Order order = createOrder(cart);
     order.setTotalAmount(calculateTotalAmount(order));
     Order savedOrder = orderRepository.save(order);
