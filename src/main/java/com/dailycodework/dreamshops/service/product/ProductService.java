@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.dailycodework.dreamshops.exceptions.AlreadyExistsException;
 import com.dailycodework.dreamshops.exceptions.ProductNotFoundException;
 import com.dailycodework.dreamshops.model.Category;
 import com.dailycodework.dreamshops.model.Product;
@@ -29,6 +30,11 @@ public class ProductService implements IProductService {
 
   @Override
   public Product addProduct(AddProductRequest request) {
+    if (productRepository.existsByNameAndBrand(request.getName(), request.getBrand())) {
+      throw new AlreadyExistsException(
+          "Product with name " + request.getName() + " and brand " + request.getBrand());
+    }
+
     // Extract the category name from the request
     String categoryName = request.getCategory().getName();
 

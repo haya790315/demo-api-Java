@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dailycodework.dreamshops.exceptions.AlreadyExistsException;
 import com.dailycodework.dreamshops.exceptions.ProductNotFoundException;
 import com.dailycodework.dreamshops.model.Product;
 import com.dailycodework.dreamshops.request.AddProductRequest;
@@ -77,8 +78,8 @@ public class ProductController {
     try {
       Product theProduct = productService.addProduct(product);
       return ResponseEntity.ok(new ApiResponse("Add product success! 🥳", theProduct));
-    } catch (Exception e) {
-      return ResponseEntity.internalServerError().body(new ApiResponse(e.getMessage(), null));
+    } catch (AlreadyExistsException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null));
     }
   }
 
