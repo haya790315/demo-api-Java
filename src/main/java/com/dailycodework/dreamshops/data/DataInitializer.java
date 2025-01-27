@@ -3,6 +3,7 @@ package com.dailycodework.dreamshops.data;
 import com.dailycodework.dreamshops.model.Category;
 import com.dailycodework.dreamshops.model.Image;
 import com.dailycodework.dreamshops.model.Product;
+import com.dailycodework.dreamshops.model.Role;
 // import com.dailycodework.dreamshops.model.Role;
 import com.dailycodework.dreamshops.model.User;
 import com.dailycodework.dreamshops.repository.CategoryRepository;
@@ -12,11 +13,12 @@ import com.dailycodework.dreamshops.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
-// import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,20 +33,20 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
   private final ProductRepository productRepository;
 
   private final ImageRepository imageRepository;
-  // private final RoleRepository roleRepository;
-  // private final PasswordEncoder passwordEncoder;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Override
   public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-    // Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
+    Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
+    createDefaultRoleIfNotExits(defaultRoles);
     createDefaultUserIfNotExits();
+    createDefaultAdminIfNotExits();
     createDefaultProducts();
-    // createDefaultRoleIfNotExits(defaultRoles);
-    // createDefaultAdminIfNotExits();
   }
 
   private void createDefaultUserIfNotExits() {
-    // Role userRole = roleRepository.findByName("ROLE_USER").get();
+    Role userRole = roleRepository.findByName("ROLE_USER").get();
     for (int i = 1; i <= 3; i++) {
       String defaultEmail = "user" + i + "@email.com";
       if (userRepository.existsByEmail(defaultEmail)) {
@@ -54,12 +56,37 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
       user.setFirstName("The User");
       user.setLastName("User" + i);
       user.setEmail(defaultEmail);
-      // user.setPassword(passwordEncoder.encode("123456"));
-      user.setPassword("123456");
-      // user.setRoles(Set.of(userRole));
+      user.setPassword(passwordEncoder.encode("87654321"));
+      // user.setPassword("123456");
+      user.setRoles(Set.of(userRole));
       userRepository.save(user);
       System.out.println("Default vet user " + i + " created successfully.");
     }
+  }
+
+  private void createDefaultAdminIfNotExits() {
+    Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+    for (int i = 1; i <= 2; i++) {
+      String defaultEmail = "admin" + i + "@email.com";
+      if (userRepository.existsByEmail(defaultEmail)) {
+        continue;
+      }
+      User user = new User();
+      user.setFirstName("Admin");
+      user.setLastName("Admin" + i);
+      user.setEmail(defaultEmail);
+      // user.setPassword("123456");
+      user.setPassword(passwordEncoder.encode("123456"));
+      user.setRoles(Set.of(adminRole));
+      userRepository.save(user);
+      System.out.println("Default admin user " + i + " created successfully.");
+    }
+  }
+
+  private void createDefaultRoleIfNotExits(Set<String> roles) {
+    roles.stream()
+        .filter(role -> roleRepository.findByName(role).isEmpty())
+        .map(Role::new).forEach(roleRepository::save);
   }
 
   private void createDefaultProducts() {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -73,6 +74,7 @@ public class ProductController {
     }
   }
 
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PostMapping("/add")
   public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
     try {
@@ -83,6 +85,7 @@ public class ProductController {
     }
   }
 
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @PutMapping("/product/{productId}")
   public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long productId,
       @RequestBody ProductUpdateRequest updateProduct) {
@@ -98,6 +101,7 @@ public class ProductController {
     }
   }
 
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @DeleteMapping("/product/{productId}/delete")
   public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
     try {
