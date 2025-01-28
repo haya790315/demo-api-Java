@@ -121,9 +121,10 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     };
 
     for (Product product : products) {
-      if (!productRepository.existsByName(product.getName())) {
-        productRepository.save(product);
+      if (productRepository.existsByName(product.getName())) {
+        continue;
       }
+      productRepository.save(product);
       if (productRepository.count() == products.length) {
         System.out.println("Default products created successfully.");
       }
@@ -146,9 +147,10 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     };
 
     for (Image image : images) {
-      if (!imageRepository.existsByFileName(image.getFileName())) {
-        imageRepository.save(image);
+      if (imageRepository.existsByFileName(image.getFileName())) {
+        continue;
       }
+      imageRepository.save(image);
       if (imageRepository.count() == images.length) {
         System.out.println("Default images created successfully.");
       }

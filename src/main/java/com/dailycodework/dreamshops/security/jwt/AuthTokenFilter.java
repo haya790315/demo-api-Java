@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.security.jwt;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,15 +13,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.dailycodework.dreamshops.security.user.ShopUserService;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 public class AuthTokenFilter extends OncePerRequestFilter {
+  @Autowired
   private JwtUtils jwtUtils;
+  @Autowired
   private ShopUserService userDetailService;
 
+  @Override
   protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain) throws ServletException, IOException {
     try {
@@ -32,8 +38,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
-    } catch (UsernameNotFoundException e) {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+    } catch (UsernameNotFoundException | JwtException e) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Not Authenticated");
+      return;
+    } catch (IllegalArgumentException e) {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not Authorized");
       return;
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
