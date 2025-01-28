@@ -2,6 +2,8 @@ package com.dailycodework.dreamshops.security.jwt;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,9 +42,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       }
     } catch (UsernameNotFoundException | JwtException e) {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Not Authenticated");
-      return;
-    } catch (IllegalArgumentException e) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Not Authorized");
       return;
     } catch (Exception e) {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
